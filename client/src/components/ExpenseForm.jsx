@@ -5,12 +5,20 @@ const ExpenseForm = ({ onAddExpense }) => {
     const [amount, setAmount] = useState('');
     const [category, setCategory] = useState('');
 
-    const handleSubmit = (e) => {
+const handleSubmit = (e) => {
         e.preventDefault();
-        if (!title || !amount || !category) return;
         
-        // Send data to parent
-        onAddExpense({ title, amount, category });
+        // 1. Debugging: See what the form is actually trying to send
+        console.log("Form Data:", { title, amount, category });
+
+        // 2. Visual Feedback: Tell the user if something is missing
+        if (!title || !amount || !category) {
+            alert("Please fill in all fields (Title, Amount, and Category)");
+            return;
+        }
+        
+        // Send data to parent (Convert amount to number just to be safe)
+        onAddExpense({ title, amount: Number(amount), category });
         
         // Reset form
         setTitle('');
