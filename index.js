@@ -1,11 +1,32 @@
-// ... existing imports ...
-const expenseRoutes = require('./routes/expenses'); // <--- ADD THIS
+// 1. Imports (Must be at the top!)
+require('dotenv').config();
+const express = require('express');
+const mongoose = require('mongoose');
+const cors = require('cors');
 
-// ... inside middleware ...
+// Import Routes
+const expenseRoutes = require('./routes/expenses');
+
+// 2. Initialize App
+const app = express();
+
+// 3. Middleware (The settings)
 app.use(express.json());
 app.use(cors());
 
-// ... Routes ...
-app.use('/api/expenses', expenseRoutes); // <--- ADD THIS
+// 4. Connect to Database
+mongoose.connect(process.env.MONGO_URI)
+    .then(() => console.log("✅ MongoDB Connected Successfully!"))
+    .catch((err) => console.error("❌ MongoDB Connection Error:", err));
 
-// ... existing connection code ...
+// 5. Routes (The API links)
+app.use('/api/expenses', expenseRoutes);
+
+// Basic test route
+app.get('/', (req, res) => {
+    res.send("API is running...");
+});
+
+// 6. Start Server
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
